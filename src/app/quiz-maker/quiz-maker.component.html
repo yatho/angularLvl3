@@ -1,20 +1,27 @@
 <div class="row">
-  <div class="col-sm-11">
-    <select #category id="categorySelect">
-      <option>Select category</option>
-      <option [value]="category.id" *ngFor="let category of categories$ | async">
-        {{category.name}}
-      </option>
-    </select>
-    <select #difficulty id="difficultySelect">
-      <option>Select difficulty</option>
-      <option>Easy</option>
-      <option>Medium</option>
-      <option>Hard</option>
-    </select>
-    <button class="primary" id="createBtn" (click)="createQuiz(category.value, difficulty.value)">Create</button>
+  <div class="col-sm-11" *ngIf="categories$ | async as categories">
+    <form [formGroup]="filterForm" (ngSubmit)="createQuiz()">
+      <select id="categorySelect" name="category" formControlName="category">
+        <option value="null">Select category</option>
+        <option [ngValue]="category" *ngFor="let category of categories">
+          {{category.name}}
+        </option>
+      </select>
+      <select id="subCategorySelect" formControlName="subCategory" *ngIf="filterForm.get('category')?.value?.id === 0">
+        <option [value]="null">Select subcategorie</option>
+        <option [ngValue]="subCategory" *ngFor="let subCategory of filterForm.get('category')?.value?.subCategories??[]">
+          {{subCategory.name}}
+        </option>
+      </select>
+      <select id="difficultySelect" formControlName="difficulty">
+        <option [value]="null">Select difficulty</option>
+        <option>Easy</option>
+        <option>Medium</option>
+        <option>Hard</option>
+      </select>
+      <button type="submit" class="primary" id="createBtn" [disabled]="filterForm.invalid">Create</button>
+    </form>
   </div>
-
 </div>
 <div class="row">
    <app-quiz [questions]="questions$ | async" ></app-quiz>

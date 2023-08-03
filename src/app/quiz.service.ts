@@ -16,11 +16,37 @@ export class QuizService {
 
   getAllCategories(): Observable<Category[]> {
     return this.http.get<{ trivia_categories: Category[] }>(this.API_URL + "api_category.php").pipe(
-      map(res => res.trivia_categories)
+      map(res => res.trivia_categories),
+      map(this.groupCategoriesByMainCategory)
     );
   }
 
-  createQuiz(categoryId: string, difficulty: Difficulty): Observable<Question[]> {
+  private groupCategoriesByMainCategory(categories: Category[]): Category[] {
+    const mainCategories: Category[] = [];
+  
+    categories.forEach((category) => {
+      const [mainCategory, subCategory] = category.name.split(": ");
+      
+      const mainCategoryObj = mainCategories.find((item) => item.name === mainCategory);
+      if (mainCategoryObj) {
+        if (!mainCategoryObj.subCategories) mainCategoryObj.subCategories = [];
+        mainCategoryObj.subCategories.push({
+          id: category.id,
+          name: subCategory
+        });
+      } else {
+        mainCategories.push({
+          id: subCategory ? 0 : category.id,
+          name: mainCategory,
+          subCategories: subCategory ? [{id: category.id, name: subCategory}] : [],
+        });
+      }
+    });
+  
+    return mainCategories;
+  }
+
+  createQuiz(categoryId: number, difficulty: Difficulty): Observable<Question[]> {
     return this.http.get<{ results: ApiQuestion[] }>(
         `${this.API_URL}/api.php?amount=5&category=${categoryId}&difficulty=${difficulty.toLowerCase()}&type=multiple`)
       .pipe(
