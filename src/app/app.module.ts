@@ -9,6 +9,10 @@ import {QuizMakerComponent} from './quiz-maker/quiz-maker.component';
 import { QuizComponent } from './quiz/quiz.component';
 import { QuestionComponent } from './question/question.component';
 import { AnswersComponent } from './answers/answers.component';
+import { AutoFilterDropDownComponent } from './auto-filter-drop-down/auto-filter-drop-down.component';
+import { FilteredListPipe } from './filtered-list.pipe';
+import { BoldSearchTextDirective } from './bold-search-text.directive';
+import { ClickOutsideDirective } from './click-outside.directive';
 
 @NgModule({
   declarations: [
@@ -16,7 +20,11 @@ import { AnswersComponent } from './answers/answers.component';
     QuizMakerComponent,
     QuizComponent,
     QuestionComponent,
-    AnswersComponent
+    AnswersComponent,
+    AutoFilterDropDownComponent,
+    FilteredListPipe,
+    BoldSearchTextDirective,
+    ClickOutsideDirective
   ],
   imports: [
     BrowserModule,

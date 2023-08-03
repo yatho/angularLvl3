@@ -1,19 +1,9 @@
 <div class="row">
   <div class="col-sm-11" *ngIf="categories$ | async as categories">
     <form [formGroup]="filterForm" (ngSubmit)="createQuiz()">
-      <select id="categorySelect" name="category" formControlName="category">
-        <option value="null">Select category</option>
-        <option [ngValue]="category" *ngFor="let category of categories">
-          {{category.name}}
-        </option>
-      </select>
-      <select id="subCategorySelect" formControlName="subCategory" *ngIf="filterForm.get('category')?.value?.id === 0">
-        <option [value]="null">Select subcategorie</option>
-        <option [ngValue]="subCategory" *ngFor="let subCategory of filterForm.get('category')?.value?.subCategories??[]">
-          {{subCategory.name}}
-        </option>
-      </select>
-      <select id="difficultySelect" formControlName="difficulty">
+      <app-auto-filter-drop-down placeholder="Select category" [options]="categories" formControlName="category"></app-auto-filter-drop-down>
+      <app-auto-filter-drop-down placeholder="Select subcategory" [options]="filterForm.get('category')?.value?.subCategories??[]" formControlName="subCategory" *ngIf="filterForm.get('category')?.value?.id === 0"></app-auto-filter-drop-down>
+      <select placeholder="Select difficulty" id="difficultySelect" formControlName="difficulty">
         <option [value]="null">Select difficulty</option>
         <option>Easy</option>
         <option>Medium</option>

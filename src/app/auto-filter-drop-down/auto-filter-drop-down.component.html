@@ -1,0 +1,14 @@
+<div appClickOutside (appClickOutside)="openned = false">
+    <input
+        [placeholder]="placeholder"
+        type="text"
+        [(ngModel)]="searchValue"
+        (ngModelChange)="openned = true"
+        (focus)="openned = true"
+    />
+    <ul *ngIf="openned">
+        <li [appBoldSearchText]="searchValue" *ngFor="let option of options | filteredList: searchValue" (click)="onOptionClick(option)">
+            {{ option.name }}
+        </li>
+    </ul>
+</div>

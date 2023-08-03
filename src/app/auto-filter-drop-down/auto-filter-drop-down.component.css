@@ -1,0 +1,28 @@
+:host {
+    display: inline-block;
+}
+
+div {
+    position: relative;
+}
+
+ul {
+    list-style-type: none;
+    padding: 7px 0;
+    margin: 0;
+    background-color: white;
+    min-width: 100%;
+    max-width: fit-content;
+    position: absolute;
+    z-index: 1;
+    left: 0;
+
+    & > li {
+        cursor: pointer;
+        padding: 7px;
+
+        &:hover {
+            background-color: #EEFFFF;
+        }
+    }
+}
