@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {map, Observable} from 'rxjs';
+import {map, Observable, of, tap} from 'rxjs';
 import {Category, Difficulty, ApiQuestion, Question, Results} from './data.models';
 
 @Injectable({
@@ -9,6 +9,7 @@ import {Category, Difficulty, ApiQuestion, Question, Results} from './data.model
 export class QuizService {
 
   private API_URL = "https://opentdb.com/";
+  private lastestQuizzOptions?: {categoryId: number; difficulty: Difficulty};
   private latestResults!: Results;
 
   constructor(private http: HttpClient) {
@@ -47,8 +48,27 @@ export class QuizService {
   }
 
   createQuiz(categoryId: number, difficulty: Difficulty): Observable<Question[]> {
+    return this.getQuestionList(categoryId, difficulty)
+      .pipe(
+        tap(() => {
+          this.lastestQuizzOptions = {
+            categoryId: categoryId,
+            difficulty: difficulty
+          }
+        })
+      );
+  }
+
+  getNewQuestion(): Observable<Question> {
+    if (!this.lastestQuizzOptions) return of();
+    return this.getQuestionList(this.lastestQuizzOptions.categoryId, this.lastestQuizzOptions.difficulty, 1).pipe(
+      map(res => res[0])
+    )
+  }
+
+  private getQuestionList(categoryId: number, difficulty: Difficulty, questionCount: number = 5) : Observable<Question[]> {
     return this.http.get<{ results: ApiQuestion[] }>(
-        `${this.API_URL}/api.php?amount=5&category=${categoryId}&difficulty=${difficulty.toLowerCase()}&type=multiple`)
+      `${this.API_URL}/api.php?amount=${questionCount}&category=${categoryId}&difficulty=${difficulty.toLowerCase()}&type=multiple`)
       .pipe(
         map(res => {
           const quiz: Question[] = res.results.map(q => (
@@ -64,7 +84,8 @@ export class QuizService {
     questions.forEach((q, index) => {
       if (q.correct_answer == answers[index])
         score++;
-    })
+    });
+    delete this.lastestQuizzOptions;
     this.latestResults = {questions, answers, score};
   }
 

@@ -5,4 +5,7 @@
           *ngFor="let answer of question.all_answers"
           [innerHTML]="answer">
   </button>
+  <button class="switch" (click)="switchQuestionClicked()" *ngIf="displayChangeQuestionOption">
+    Change question
+  </button>
 </div>
