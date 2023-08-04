@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AutoFilterDropDownComponent } from './auto-filter-drop-down.component';
+import { AutoFilterDropDownComponent, OptionValue } from './auto-filter-drop-down.component';
 
 describe('AutoFilterDropDownComponent', () => {
-  let component: AutoFilterDropDownComponent;
-  let fixture: ComponentFixture<AutoFilterDropDownComponent>;
+  let component: AutoFilterDropDownComponent<OptionValue>;
+  let fixture: ComponentFixture<AutoFilterDropDownComponent<OptionValue>>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
